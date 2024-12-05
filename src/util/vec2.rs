@@ -85,6 +85,7 @@ macro_rules! implement_into_from {
                     y: y as $type_name,
                 })
             }
+            pub  const ZZ: Vec2<$type_name> = Vec2 { x: 0, y: 0 };
         }
 
         impl<U> Access<$type_name> for &[Vec<U>]
