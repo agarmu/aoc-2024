@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 #[aoc_generator(day1)]
 fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
-    let (mut l, mut r): (Vec<_>, Vec<_>) = input
+    let (l, r): (Vec<_>, Vec<_>) = input
         .lines()
         .map(|x| -> (i64, i64) {
             let mut s = x.split_whitespace();
