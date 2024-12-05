@@ -62,22 +62,6 @@ where
     }
 }
 
-impl<T> Vec2<T>
-where
-    T: FromUsize + Copy + Add<T, Output = T> + Mul<T, Output = T>,
-{
-    pub fn cover<U>(data: &[Vec<U>]) -> impl Iterator<Item = Vec2<T>> {
-        let l = data.len();
-        let sublens = data.iter().map(|x| x.len()).collect::<Vec<_>>();
-        Iterator::zip(0..l, sublens)
-            .flat_map(|(x, ymax)| iproduct!(x..=x, 0..ymax))
-            .map(|(x, y)| Vec2 {
-                x: T::from_usize(x),
-                y: T::from_usize(x),
-            })
-    }
-}
-
 pub trait IntoUsize: Copy {
     fn into_usize(self) -> usize;
 }
@@ -96,6 +80,18 @@ macro_rules! implement_into_from {
         impl FromUsize for $type_name {
             fn from_usize(x: usize) -> $type_name {
                 x as $type_name
+            }
+        }
+        impl Vec2<$type_name> {
+            pub fn cover<U>(data: &[Vec<U>]) -> impl Iterator<Item = Vec2<$type_name>> {
+            let l = data.len();
+            let sublens = data.iter().map(|x| x.len()).collect::<Vec<_>>();
+            Iterator::zip(0..l, sublens)
+                .flat_map(|(x, ymax)| iproduct!(x..=x, 0..ymax))
+                .map(|(x, y)| Vec2 {
+                    x: x as $type_name,
+                    y: y as $type_name,
+                })
             }
         }
     };
