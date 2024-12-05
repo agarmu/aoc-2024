@@ -1,7 +1,6 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 
 use itertools::iproduct;
-use num::Integer;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Vec2<T>
