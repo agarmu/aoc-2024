@@ -64,20 +64,6 @@ where
 
 impl<T> Vec2<T>
 where
-    T: From<i8> + Copy + Add<T, Output = T> + Mul<T, Output = T>,
-{
-    pub fn moore() -> impl Iterator<Item = Vec2<T>> {
-        iproduct!(-1i8..=1, -1i8..=1)
-            .filter(|(x, y)| !(*x == 0 && *y == 0))
-            .map(|(x, y)| Vec2 {
-                x: x.into(),
-                y: y.into(),
-            })
-    }
-}
-
-impl<T> Vec2<T>
-where
     T: FromUsize + Copy + Add<T, Output = T> + Mul<T, Output = T>,
 {
     pub fn cover<U>(data: &[Vec<U>]) -> impl Iterator<Item = Vec2<T>> {
@@ -130,6 +116,17 @@ macro_rules! implement_dirs {
             pub const S: Vec2<$type_name> = Vec2 { x: 0, y: 1 };
             pub const E: Vec2<$type_name> = Vec2 { x: -1, y: 0 };
             pub const W: Vec2<$type_name> = Vec2 { x: 1, y: 0 };
+
+            pub const MOORE: [Vec2<$type_name>; 8] = [
+                Self::NE,
+                Self::NW,
+                Self::SE,
+                Self::SW,
+                Self::N,
+                Self::E,
+                Self::S,
+                Self::W
+            ];
         }
     };
     ($t1:ty, $($t2:ty),+) => {
