@@ -1,11 +1,11 @@
-use std::ops::{Add, AddAssign, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
 use itertools::iproduct;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Vec2<T>
 where
-    T: Copy + Add<T, Output = T> + Mul<T, Output = T>,
+    T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
 {
     pub x: T,
     pub y: T,
@@ -14,7 +14,7 @@ where
 impl<T, U> Mul<T> for Vec2<U>
 where
     T: Into<U>,
-    U: Copy + Add<U, Output = U> + Mul<U, Output = U>,
+    U: Copy + Add<U, Output = U> + Mul<U, Output = U> + Sub<U, Output = U>,
 {
     type Output = Vec2<U>;
     fn mul(self, t: T) -> Self {
@@ -26,9 +26,21 @@ where
     }
 }
 
+impl<T, U> MulAssign<T> for Vec2<U>
+where
+    T: Into<U>,
+    U: Copy + Add<U, Output = U> + Mul<U, Output = U> + Sub<U, Output = U>,
+{
+    fn mul_assign(&mut self, rhs: T) {
+        let t = rhs.into();
+        self.x = self.x * t;
+        self.y = self.y * t;
+    }
+}
+
 impl<T> Add for Vec2<T>
 where
-    T: Copy + Add<T, Output = T> + Mul<T, Output = T>,
+    T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
 {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
@@ -41,7 +53,7 @@ where
 
 impl<T> AddAssign for Vec2<T>
 where
-    T: Copy + Add<T, Output = T> + Mul<T, Output = T>,
+    T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
 {
     fn add_assign(&mut self, rhs: Self) {
         self.x = self.x + rhs.x;
@@ -49,21 +61,32 @@ where
     }
 }
 
-impl<T, U> MulAssign<T> for Vec2<U>
+impl<T> Sub for Vec2<T>
 where
-    T: Into<U>,
-    U: Copy + Add<U, Output = U> + Mul<U, Output = U>,
+    T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
 {
-    fn mul_assign(&mut self, rhs: T) {
-        let t = rhs.into();
-        self.x = self.x * t;
-        self.y = self.y * t;
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
+impl<T> SubAssign for Vec2<T>
+where
+    T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
+{
+    fn sub_assign(&mut self, rhs: Self) {
+        self.x = self.x - rhs.x;
+        self.y = self.y - rhs.y;
     }
 }
 
 pub trait Access<T>
 where
-    T: Copy + Add<T, Output = T> + Mul<T, Output = T>,
+    T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
 {
     type Inner: Clone;
     fn access(&self, v: Vec2<T>) -> Self::Inner;
