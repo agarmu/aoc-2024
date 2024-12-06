@@ -1,4 +1,3 @@
-use core::fmt;
 use std::collections::{HashMap, HashSet};
 
 use aoc_runner_derive::{aoc, aoc_generator};
@@ -41,7 +40,7 @@ fn parse(input: &str) -> Input {
     Input { edges, sorts }
 }
 
-fn quick_sort<'a, T, F>(v: &'a mut [T], f: &F)
+fn quick_sort<T, F>(v: &mut [T], f: &F)
 where
     T: Copy,
     F: Fn(T, T) -> bool,
@@ -112,7 +111,7 @@ fn part2(input: &Input) -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pretty_assertions::{assert_eq, assert_ne, assert_str_eq};
+    use pretty_assertions::assert_eq;
 
     const TEST_INPUT: &str = include_str!("../input/2024/day5_sample.txt");
     #[test]
