@@ -1,5 +1,5 @@
 [package]
-name = "advent-of-code-2024"
+name = "aoc-2024"
 version = "0.1.0"
 authors = ["Mukul Agarwal"]
 edition = "2021"
@@ -8,6 +8,7 @@ edition = "2021"
 bench = false
 
 [dependencies]
+
 aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"
 itertools = "0.13.0"
@@ -15,4 +16,4 @@ lazy_static = "1.5.0"
 num = "0.4.3"
 pretty_assertions = "1.4.1"
 regex = "1.11.1"
-
+util = { version = "0.1.0", path = "../util" }

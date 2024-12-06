@@ -1,6 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use crate::util::*;
+use util::*;
 
 #[aoc_generator(day4)]
 fn parse(input: &str) -> Vec<Vec<u8>> {
