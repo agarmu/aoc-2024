@@ -10,7 +10,7 @@ fn parse(input: &str) -> Vec<Vec<i64>> {
         .collect()
 }
 
-pub fn is_safe(x: &[i64]) -> bool {
+#[must_use] pub fn is_safe(x: &[i64]) -> bool {
     if x.len() < 2 {
         return true;
     }
@@ -29,7 +29,7 @@ pub fn is_safe(x: &[i64]) -> bool {
     true
 }
 
-pub fn is_almost_safe(x: &[i64]) -> bool {
+#[must_use] pub fn is_almost_safe(x: &[i64]) -> bool {
     if is_safe(x) {
         return true;
     }
@@ -44,12 +44,12 @@ pub fn is_almost_safe(x: &[i64]) -> bool {
 }
 
 #[aoc(day2, part1)]
-pub fn part1(dat: &[Vec<i64>]) -> usize {
+#[must_use] pub fn part1(dat: &[Vec<i64>]) -> usize {
     dat.iter().filter(|x| is_safe(x)).count()
 }
 
 #[aoc(day2, part2)]
-pub fn part2(dat: &[Vec<i64>]) -> usize {
+#[must_use] pub fn part2(dat: &[Vec<i64>]) -> usize {
     dat.iter().filter(|x| is_almost_safe(x)).count()
 }
 

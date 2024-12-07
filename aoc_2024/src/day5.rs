@@ -13,7 +13,7 @@ fn parse(input: &str) -> Input {
     let (lhs, rhs) = input.split_once("\n\n").expect("Could not parse");
 
     let edgelist = lhs.lines().map(|x| {
-        let (from, to) = x.split_once("|").expect("Could not parse line");
+        let (from, to) = x.split_once('|').expect("Could not parse line");
         (
             from.parse::<i64>().expect("Invalid Number"),
             to.parse::<i64>().expect("Invalid Number"),
@@ -31,7 +31,7 @@ fn parse(input: &str) -> Input {
     let sorts = rhs
         .lines()
         .map(|x| {
-            x.split(",")
+            x.split(',')
                 .map(|x| x.parse::<i64>().expect("Invalid Number"))
                 .collect()
         })
@@ -79,7 +79,7 @@ where
 
 #[aoc(day5, part1)]
 fn part1(input: &Input) -> i64 {
-    let is_lesseq = |x, y| input.edges.get(y).map(|s| !s.contains(x)).unwrap_or(true);
+    let is_lesseq = |x, y| input.edges.get(y).map_or(true, |s| !s.contains(x));
     input
         .sorts
         .iter()
@@ -93,8 +93,8 @@ fn part1(input: &Input) -> i64 {
 #[aoc(day5, part2)]
 fn part2(input: &Input) -> i64 {
     let e = input.edges.clone();
-    let is_lesseq = |x, y| e.get(y).map(|s| !s.contains(x)).unwrap_or(true);
-    let is_lesseq2 = |x, y| e.get(&y).map(|s| !s.contains(&x)).unwrap_or(true);
+    let is_lesseq = |x, y| e.get(y).map_or(true, |s| !s.contains(x));
+    let is_lesseq2 = |x, y| e.get(&y).map_or(true, |s| !s.contains(&x));
 
     let mut sum = 0;
     for l in &input.sorts {

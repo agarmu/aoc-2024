@@ -15,11 +15,11 @@ fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
 }
 
 #[aoc(day1, part1)]
-pub fn part1((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
+#[must_use] pub fn part1((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
     let mut left = left.clone();
     let mut right = right.clone();
-    left.sort();
-    right.sort();
+    left.sort_unstable();
+    right.sort_unstable();
     left.iter()
         .zip(right.iter())
         .map(|(x, y)| x.abs_diff(*y) as i64)
@@ -27,7 +27,7 @@ pub fn part1((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
 }
 
 #[aoc(day1, part2)]
-pub fn part2((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
+#[must_use] pub fn part2((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new();
     for x in right {
         *counts.entry(*x).or_insert(0) += 1;

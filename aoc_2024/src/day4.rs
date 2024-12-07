@@ -1,6 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use util::*;
+use util::{Access as _, Vec2};
 
 #[aoc_generator(day4)]
 fn parse(input: &str) -> Vec<Vec<u8>> {
@@ -32,7 +32,7 @@ fn discover(data: &[Vec<u8>], string: &[u8], base_pt: Vec2<i64>) -> usize {
         .count()
 }
 
-fn check_dia(chara: u8, charb: u8) -> bool {
+const fn check_dia(chara: u8, charb: u8) -> bool {
     (chara == b'M' && charb == b'S') || (chara == b'S' && charb == b'M')
 }
 fn discover_2(data: &[Vec<u8>], base_pt: Vec2<i64>) -> bool {
@@ -47,7 +47,7 @@ fn discover_2(data: &[Vec<u8>], base_pt: Vec2<i64>) -> bool {
 
 #[aoc(day4, part1)]
 fn part1(input: &[Vec<u8>]) -> usize {
-    let search_string = "XMAS".as_bytes();
+    let search_string = b"XMAS";
     Vec2::<i64>::cover(input)
         .map(|v| discover(input, search_string, v))
         .sum()

@@ -2,9 +2,9 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 
 use aoc_runner_derive::{aoc, aoc_generator};
-use rayon::iter::IntoParallelRefIterator;
-use rayon::iter::ParallelIterator;
-use util::Access;
+use rayon::iter::IntoParallelRefIterator as _;
+use rayon::iter::ParallelIterator as _;
+use util::Access as _;
 use util::Vec2;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -22,16 +22,16 @@ enum Dir {
 }
 
 impl Dir {
-    fn dir(&self) -> Vec2<i64> {
+    const fn dir(&self) -> Vec2<i64> {
         match self {
-            Dir::North => Vec2::<i64>::N,
-            Dir::South => Vec2::<i64>::S,
-            Dir::East => Vec2::<i64>::E,
-            Dir::West => Vec2::<i64>::W,
+            Self::North => Vec2::<i64>::N,
+            Self::South => Vec2::<i64>::S,
+            Self::East => Vec2::<i64>::E,
+            Self::West => Vec2::<i64>::W,
         }
     }
     fn next(&mut self) {
-        use Dir::*;
+        use Dir::{East, North, South, West};
         *self = match self {
             North => East,
             East => South,
@@ -49,7 +49,7 @@ struct Parse {
 
 #[aoc_generator(day6)]
 fn parse(input: &str) -> Parse {
-    use Cell::*;
+    use Cell::{Blocked, Empty};
     let mut res = Vec::new();
     let mut v = Vec2::<i64>::ZZ;
     for (y, line) in input.trim().lines().map(|x| x.as_bytes()).enumerate() {
@@ -94,7 +94,7 @@ fn run_nocheckloop(
     start_pos: Vec2<i64>,
     start_dir: Dir,
 ) -> HashMap<Vec2<i64>, Pred> {
-    use Cell::*;
+    use Cell::{Blocked, Empty};
     let mut pred: HashMap<Vec2<i64>, Pred> = HashMap::new();
     let mut current_pos = start_pos;
     let mut current_dir = start_dir;
@@ -128,7 +128,7 @@ struct Visit {
 }
 
 impl Visit {
-    fn new(loc: Vec2<i64>, dir: Dir) -> Self {
+    const fn new(loc: Vec2<i64>, dir: Dir) -> Self {
         Self { loc, dir }
     }
 }
@@ -138,7 +138,7 @@ fn induces_loop(
     start_dir: Dir,
     obstacle_added: Vec2<i64>,
 ) -> bool {
-    use Cell::*;
+    use Cell::Blocked;
     let mut obstacles_hit: HashSet<Visit> = HashSet::new();
     let mut current_pos = start_pos;
     let mut current_dir = start_dir;

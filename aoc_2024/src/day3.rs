@@ -6,7 +6,7 @@ struct Mul {
     rhs: i64,
 }
 impl Mul {
-    fn compute(&self) -> i64 {
+    const fn compute(&self) -> i64 {
         self.lhs * self.rhs
     }
 }
@@ -19,7 +19,7 @@ enum Instr {
 
 impl Instr {
     fn compute(&self, enable: &mut bool) -> i64 {
-        use Instr::*;
+        use Instr::{Do, Dont, Multiply};
         match self {
             Do => {
                 *enable = true;
@@ -42,7 +42,7 @@ impl Instr {
 
 #[aoc_generator(day3, part1)]
 fn parse(input: &str) -> Vec<Mul> {
-    let regex = Regex::new(r#"mul\((\d+),(\d+)\)"#).unwrap();
+    let regex = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
     regex
         .captures_iter(input)
         .map(|c| c.extract())
@@ -61,7 +61,7 @@ fn part1(input: &[Mul]) -> i64 {
 
 #[aoc_generator(day3, part2)]
 fn parse2(input: &str) -> Vec<Instr> {
-    let regex = Regex::new(r#"(mul\((\d+),(\d+)\)|do?\(\)|don't\(\))"#).unwrap();
+    let regex = Regex::new(r"(mul\((\d+),(\d+)\)|do?\(\)|don't\(\))").unwrap();
     regex
         .captures_iter(input)
         .map(|c| {
@@ -77,9 +77,9 @@ fn parse2(input: &str) -> Vec<Instr> {
                 let rhs = arg2.parse().unwrap();
                 Instr::Multiply(Mul { lhs, rhs })
             } else if r.as_bytes()[2] == b'(' {
-                Instr::Do
+                return Instr::Do
             } else {
-                Instr::Dont
+                return Instr::Dont
             }
         })
         .collect::<Vec<_>>()
