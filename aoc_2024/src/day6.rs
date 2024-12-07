@@ -7,7 +7,7 @@ use rayon::iter::ParallelIterator;
 use util::Access;
 use util::Vec2;
 
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum Cell {
     Blocked,
     Empty,
@@ -235,13 +235,13 @@ mod tests {
         let parsed = parse(TEST_INPUT);
         let output = part1(&parsed);
         assert_eq!(41, output);
-        for (name, dir) in &[
+        for (dirname, dir) in &[
             ("North", TEST_N),
             ("South", TEST_S),
             ("East", TEST_E),
             ("West", TEST_W),
         ] {
-            assert_eq!(2, part1(&parse(dir)));
+            assert_eq!(2, part1(&parse(dir)), "Testing direction {}", dirname);
         }
     }
 
