@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::collections::HashSet;
 
 use aoc_runner_derive::{aoc, aoc_generator};
@@ -78,18 +79,40 @@ fn parse(input: &str) -> Parse {
 
 #[aoc(day6, part1)]
 fn part1(input: &Parse) -> usize {
-    run_nocheckloop(input).len()
+    run_nocheckloop(&input.cells, input.start_pos, Dir::North)
+        .0
+        .len()
 }
 
-fn run_nocheckloop(input: &Parse) -> HashSet<Vec2<i64>> {
-    use Cell::*;
-    use Dir::*;
-    let mut visited: HashSet<Vec2<i64>> = HashSet::new();
-    let mut current_pos = input.start_pos;
-    let mut current_dir = North;
-    let cells: &[Vec<Cell>] = &input.cells;
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+struct Pred {
+    pub loc: Vec2<i64>,
+    pub dir: Dir,
+}
 
+#[inline(always)]
+fn run_nocheckloop(
+    cells: &[Vec<Cell>],
+    start_pos: Vec2<i64>,
+    start_dir: Dir,
+) -> (HashSet<Vec2<i64>>, HashMap<Vec2<i64>, Pred>) {
+    use Cell::*;
+    let mut visited: HashSet<Vec2<i64>> = HashSet::new();
+    let mut pred: HashMap<Vec2<i64>, Pred> = HashMap::new();
+    let mut current_pos = start_pos;
+    let mut current_dir = start_dir;
+    let mut prev_pos = start_pos;
     loop {
+        if !pred.contains_key(&current_pos) {
+            pred.insert(
+                current_pos,
+                Pred {
+                    loc: prev_pos,
+                    dir: current_dir,
+                },
+            );
+        }
+        prev_pos = current_pos;
         match cells.try_access(current_pos) {
             None => {
                 break;
@@ -104,7 +127,7 @@ fn run_nocheckloop(input: &Parse) -> HashSet<Vec2<i64>> {
             }
         }
     }
-    visited
+    (visited, pred)
 }
 
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
@@ -118,13 +141,16 @@ impl Visit {
         Self { loc, dir }
     }
 }
-fn induces_loop(input: &Parse, obstacle_added: Vec2<i64>) -> bool {
+fn induces_loop(
+    cells: &[Vec<Cell>],
+    start_pos: Vec2<i64>,
+    start_dir: Dir,
+    obstacle_added: Vec2<i64>,
+) -> bool {
     use Cell::*;
-    use Dir::*;
     let mut obstacles_hit: HashSet<Visit> = HashSet::new();
-    let mut current_pos = input.start_pos;
-    let mut current_dir = North;
-    let cells: &[Vec<Cell>] = &input.cells;
+    let mut current_pos = start_pos;
+    let mut current_dir = start_dir;
     loop {
         match cells.try_access(current_pos) {
             None => {
@@ -153,11 +179,15 @@ fn induces_loop(input: &Parse, obstacle_added: Vec2<i64>) -> bool {
 fn part2(input: &Parse) -> usize {
     // first run the part one solution to determine which cells I am allowed to
     // edit (these are, naturally, only the cells where the guard naturally goes)
-    let mut cells_blockable = run_nocheckloop(input);
+    let (mut cells_blockable, pred) = run_nocheckloop(&input.cells, input.start_pos, Dir::North);
+    let cells: &[Vec<Cell>] = &input.cells;
     cells_blockable.remove(&input.start_pos); // cannot drop an obstacle on the guard
     cells_blockable
         .par_iter()
-        .filter(|x| induces_loop(input, **x))
+        .filter(|x| {
+            let prev = pred[*x];
+            induces_loop(cells, prev.loc, prev.dir, **x)
+        })
         .count()
 }
 
