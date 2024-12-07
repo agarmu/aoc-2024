@@ -2,16 +2,20 @@ aoc_2024::solution!(%DAY_NUMBER%);
 
 
 fn parse(input: &str) -> &str {
-    input.trim();
+    input.trim()
 }
 
 
 pub fn part_one(input: &str) -> Option<u32> {
     let input = parse(input);
+
+    None
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
     let input = parse(input);
+
+    None
 }
 
 #[cfg(test)]
