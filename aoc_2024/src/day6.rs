@@ -22,7 +22,9 @@ enum Dir {
 }
 
 impl Dir {
-    const fn dir(&self) -> Vec2<i64> {
+    #[allow(clippy::inline_always)]
+    #[inline(always)]
+    const fn dir(self) -> Vec2<i64> {
         match self {
             Self::North => Vec2::<i64>::N,
             Self::South => Vec2::<i64>::S,
@@ -30,6 +32,9 @@ impl Dir {
             Self::West => Vec2::<i64>::W,
         }
     }
+
+    #[allow(clippy::inline_always)]
+    #[inline(always)]
     fn next(&mut self) {
         use Dir::{East, North, South, West};
         *self = match self {
@@ -52,7 +57,7 @@ fn parse(input: &str) -> Parse {
     use Cell::{Blocked, Empty};
     let mut res = Vec::new();
     let mut v = Vec2::<i64>::ZZ;
-    for (y, line) in input.trim().lines().map(|x| x.as_bytes()).enumerate() {
+    for (y, line) in input.trim().lines().map(str::as_bytes).enumerate() {
         let w = line.len() + 2;
         let mut r = Vec::with_capacity(w);
         for (x, c) in line.iter().enumerate() {

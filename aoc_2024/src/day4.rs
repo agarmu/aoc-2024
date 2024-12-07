@@ -32,17 +32,17 @@ fn discover(data: &[Vec<u8>], string: &[u8], base_pt: Vec2<i64>) -> usize {
         .count()
 }
 
-const fn check_dia(chara: u8, charb: u8) -> bool {
-    (chara == b'M' && charb == b'S') || (chara == b'S' && charb == b'M')
+const fn check_dia(a: u8, b: u8) -> bool {
+    (a == b'M' && b == b'S') || (a == b'S' && b == b'M')
 }
 fn discover_2(data: &[Vec<u8>], base_pt: Vec2<i64>) -> bool {
     let process = |x| data.try_access(base_pt + x).unwrap_or(b'-');
-    let a = process(Vec2::<i64>::NE);
-    let b = process(Vec2::<i64>::SE);
-    let c = process(Vec2::<i64>::NW);
-    let d = process(Vec2::<i64>::SW);
-    let x = process(Vec2::<i64>::ZZ);
-    check_dia(a, d) && check_dia(b, c) && x == b'A'
+    let ne = process(Vec2::<i64>::NE);
+    let se = process(Vec2::<i64>::SE);
+    let nw = process(Vec2::<i64>::NW);
+    let sw = process(Vec2::<i64>::SW);
+    let center = process(Vec2::<i64>::ZZ);
+    check_dia(ne, sw) && check_dia(se, nw) && center == b'A'
 }
 
 #[aoc(day4, part1)]

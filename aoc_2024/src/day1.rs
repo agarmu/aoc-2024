@@ -15,7 +15,8 @@ fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
 }
 
 #[aoc(day1, part1)]
-#[must_use] pub fn part1((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
+#[must_use]
+pub fn part1((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
     let mut left = left.clone();
     let mut right = right.clone();
     left.sort_unstable();
@@ -27,7 +28,8 @@ fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
 }
 
 #[aoc(day1, part2)]
-#[must_use] pub fn part2((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
+#[must_use]
+pub fn part2((left, right): &(Vec<i64>, Vec<i64>)) -> i64 {
     let mut counts: HashMap<i64, i64> = HashMap::new();
     for x in right {
         *counts.entry(*x).or_insert(0) += 1;
@@ -49,8 +51,8 @@ mod tests {
     fn test_p1_sample() {
         let mut l = vec![3, 4, 2, 1, 3, 3];
         let mut r = vec![4, 3, 5, 3, 9, 3];
-        l.sort();
-        r.sort();
+        l.sort_unstable();
+        r.sort_unstable();
         let c = (l, r);
         assert_eq!(super::part1(&c), 11);
     }
@@ -58,8 +60,8 @@ mod tests {
     fn test_p2_sample() {
         let mut l = vec![3, 4, 2, 1, 3, 3];
         let mut r = vec![4, 3, 5, 3, 9, 3];
-        l.sort();
-        r.sort();
+        l.sort_unstable();
+        r.sort_unstable();
         let c = (l, r);
         assert_eq!(super::part2(&c), 31);
     }
