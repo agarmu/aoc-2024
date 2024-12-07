@@ -2,5 +2,5 @@
 resolver = "2"
 members = [
   "util",
-  "aoc_2024", "everyone-codes",
+  "aoc_2024",
 ]
