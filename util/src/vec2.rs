@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
 use itertools::iproduct;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Vec2<T>
 where
     T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
@@ -138,8 +138,8 @@ macro_rules! implement_dirs {
             pub const SW: Vec2<$type_name> = Vec2 { x: 1, y: 1 };
             pub const N: Vec2<$type_name> = Vec2 { x: 0, y: -1 };
             pub const S: Vec2<$type_name> = Vec2 { x: 0, y: 1 };
-            pub const E: Vec2<$type_name> = Vec2 { x: -1, y: 0 };
-            pub const W: Vec2<$type_name> = Vec2 { x: 1, y: 0 };
+            pub const E: Vec2<$type_name> = Vec2 { x: 1, y: 0 };
+            pub const W: Vec2<$type_name> = Vec2 { x: -1, y: 0 };
 
             pub const MOORE: [Vec2<$type_name>; 8] = [
                 Self::NE,
