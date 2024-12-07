@@ -109,15 +109,10 @@ fn run_nocheckloop(
                 current_dir.next();
             }
             Some(Empty) => {
-                if !pred.contains_key(&current_pos) {
-                    pred.insert(
-                        current_pos,
-                        Pred {
-                            loc: prev_pos,
-                            dir: current_dir,
-                        },
-                    );
-                }
+                pred.entry(current_pos).or_insert(Pred {
+                    loc: prev_pos,
+                    dir: current_dir,
+                });
                 prev_pos = current_pos;
                 current_pos += current_dir.dir();
             }
