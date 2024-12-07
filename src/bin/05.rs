@@ -1,6 +1,6 @@
-use std::collections::{HashMap, HashSet};
+aoc_2024::solution!(5);
 
-use aoc_runner_derive::{aoc, aoc_generator};
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 struct Input {
@@ -8,7 +8,6 @@ struct Input {
     sorts: Vec<Vec<i64>>,
 }
 
-#[aoc_generator(day5)]
 fn parse(input: &str) -> Input {
     let (lhs, rhs) = input.split_once("\n\n").expect("Could not parse");
 
@@ -77,24 +76,25 @@ where
     store_index
 }
 
-#[aoc(day5, part1)]
-fn part1(input: &Input) -> i64 {
+fn part_one(input: &str) -> Option<i64> {
+    let input = parse(input);
     let is_lesseq = |x, y| input.edges.get(y).map_or(true, |s| !s.contains(x));
-    input
-        .sorts
-        .iter()
-        .filter(|x| x.is_sorted_by(is_lesseq))
-        .map(|x| {
-            x[x.len() / 2] // assume odd length
-        })
-        .sum()
+    Some(
+        input
+            .sorts
+            .iter()
+            .filter(|x| x.is_sorted_by(is_lesseq))
+            .map(|x| {
+                x[x.len() / 2] // assume odd length
+            })
+            .sum(),
+    )
 }
 
-#[aoc(day5, part2)]
-fn part2(input: &Input) -> i64 {
-    let e = input.edges.clone();
-    let is_lesseq = |x, y| e.get(y).map_or(true, |s| !s.contains(x));
-    let is_lesseq2 = |x, y| e.get(&y).map_or(true, |s| !s.contains(&x));
+fn part_two(input: &str) -> Option<i64> {
+    let input = parse(input);
+    let is_lesseq = |x, y| input.edges.get(y).map_or(true, |s| !s.contains(x));
+    let is_lesseq2 = |x, y| input.edges.get(&y).map_or(true, |s| !s.contains(&x));
 
     let mut sum = 0;
     for l in &input.sorts {
@@ -105,49 +105,22 @@ fn part2(input: &Input) -> i64 {
         quick_sort(&mut l, &is_lesseq2);
         sum += l[l.len() / 2];
     }
-    sum
+    Some(sum)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pretty_assertions::assert_eq;
 
-    const TEST_INPUT: &str = "47|53
-97|13
-97|61
-97|47
-75|29
-61|13
-75|53
-29|13
-97|29
-53|29
-61|53
-97|53
-61|29
-47|13
-75|47
-97|75
-47|61
-75|61
-47|29
-75|13
-53|13
-
-75,47,61,53,29
-97,61,53,29,13
-75,29,13
-75,97,47,61,53
-61,13,29
-97,13,75,29,47";
     #[test]
-    fn part1_example() {
-        assert_eq!(part1(&parse(TEST_INPUT)), 143);
+    fn test_part_one() {
+        let result = part_one(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, Some(143));
     }
-    //
-    // #[test]
-    // fn part2_example() {
-    //     assert_eq!(part2(&parse("<EXAMPLE>")), "<RESULT>");
-    // }
+
+    #[test]
+    fn test_part_two() {
+        let result = part_two(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, Some(123));
+    }
 }

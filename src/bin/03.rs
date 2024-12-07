@@ -1,4 +1,5 @@
-use aoc_runner_derive::{aoc, aoc_generator};
+aoc_2024::solution!(3);
+
 use regex::Regex;
 
 struct Mul {
@@ -40,8 +41,7 @@ impl Instr {
     }
 }
 
-#[aoc_generator(day3, part1)]
-fn parse(input: &str) -> Vec<Mul> {
+fn parse_one(input: &str) -> Vec<Mul> {
     let regex = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
     regex
         .captures_iter(input)
@@ -54,13 +54,11 @@ fn parse(input: &str) -> Vec<Mul> {
         .collect()
 }
 
-#[aoc(day3, part1)]
-fn part1(input: &[Mul]) -> i64 {
-    input.iter().map(Mul::compute).sum()
+fn part_one(input: &str) -> Option<i64> {
+    Some(parse_one(input).iter().map(Mul::compute).sum())
 }
 
-#[aoc_generator(day3, part2)]
-fn parse2(input: &str) -> Vec<Instr> {
+fn parse_two(input: &str) -> Vec<Instr> {
     let regex = Regex::new(r"(mul\((\d+),(\d+)\)|do?\(\)|don't\(\))").unwrap();
     regex
         .captures_iter(input)
@@ -77,23 +75,36 @@ fn parse2(input: &str) -> Vec<Instr> {
                 let rhs = arg2.parse().unwrap();
                 Instr::Multiply(Mul { lhs, rhs })
             } else if r.as_bytes()[2] == b'(' {
-                return Instr::Do
+                return Instr::Do;
             } else {
-                return Instr::Dont
+                return Instr::Dont;
             }
         })
         .collect::<Vec<_>>()
 }
 
-#[aoc(day3, part2)]
-fn part2(input: &[Instr]) -> i64 {
+fn part_two(input: &str) -> Option<i64> {
     let mut sum = 0;
     let mut enable = true;
-    for x in input {
+    for x in parse_two(input) {
         sum += x.compute(&mut enable);
     }
-    sum
+    Some(sum)
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one() {
+        let result = part_one(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, None);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let result = part_two(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, None);
+    }
+}

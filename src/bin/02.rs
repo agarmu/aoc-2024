@@ -1,4 +1,5 @@
-#[aoc_generator(day2)]
+aoc_2024::solution!(2);
+
 fn parse(input: &str) -> Vec<Vec<i64>> {
     input
         .lines()
@@ -10,7 +11,8 @@ fn parse(input: &str) -> Vec<Vec<i64>> {
         .collect()
 }
 
-#[must_use] pub fn is_safe(x: &[i64]) -> bool {
+#[must_use]
+pub fn is_safe(x: &[i64]) -> bool {
     if x.len() < 2 {
         return true;
     }
@@ -29,7 +31,8 @@ fn parse(input: &str) -> Vec<Vec<i64>> {
     true
 }
 
-#[must_use] pub fn is_almost_safe(x: &[i64]) -> bool {
+#[must_use]
+pub fn is_almost_safe(x: &[i64]) -> bool {
     if is_safe(x) {
         return true;
     }
@@ -43,43 +46,29 @@ fn parse(input: &str) -> Vec<Vec<i64>> {
     false
 }
 
-#[aoc(day2, part1)]
-#[must_use] pub fn part1(dat: &[Vec<i64>]) -> usize {
-    dat.iter().filter(|x| is_safe(x)).count()
+#[must_use]
+pub fn part_one(dat: &str) -> Option<usize> {
+    Some(parse(dat).iter().filter(|x| is_safe(x)).count())
 }
 
-#[aoc(day2, part2)]
-#[must_use] pub fn part2(dat: &[Vec<i64>]) -> usize {
-    dat.iter().filter(|x| is_almost_safe(x)).count()
+#[must_use]
+pub fn part_two(dat: &str) -> Option<usize> {
+    Some(parse(dat).iter().filter(|x| is_almost_safe(x)).count())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[test]
-    fn test_p1_sample() {
-        let dat = parse(
-            "7 6 4 2 1
-1 2 7 8 9
-9 7 6 2 1
-1 3 2 4 5
-8 6 4 4 1
-1 3 6 7 9",
-        );
 
-        assert_eq!(super::part1(&dat), 2);
+    #[test]
+    fn test_part_one() {
+        let result = part_one(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, Some(2));
     }
-    #[test]
-    fn test_p2_sample() {
-        let dat = parse(
-            "7 6 4 2 1
-1 2 7 8 9
-9 7 6 2 1
-1 3 2 4 5
-8 6 4 4 1
-1 3 6 7 9",
-        );
 
-        assert_eq!(super::part2(&dat), 4);
+    #[test]
+    fn test_part_two() {
+        let result = part_two(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, Some(4));
     }
 }

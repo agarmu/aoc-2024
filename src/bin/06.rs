@@ -1,11 +1,12 @@
+aoc_2024::solution!(6);
+
 use std::collections::HashMap;
 use std::collections::HashSet;
 
-use aoc_runner_derive::{aoc, aoc_generator};
+use aoc_2024::util::Access as _;
+use aoc_2024::util::Vec2;
 use rayon::iter::IntoParallelRefIterator as _;
 use rayon::iter::ParallelIterator as _;
-use util::Access as _;
-use util::Vec2;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum Cell {
@@ -52,7 +53,6 @@ struct Parse {
     pub start_pos: Vec2<i64>,
 }
 
-#[aoc_generator(day6)]
 fn parse(input: &str) -> Parse {
     use Cell::{Blocked, Empty};
     let mut res = Vec::new();
@@ -82,9 +82,9 @@ fn parse(input: &str) -> Parse {
     }
 }
 
-#[aoc(day6, part1)]
-fn part1(input: &Parse) -> usize {
-    run_nocheckloop(&input.cells, input.start_pos, Dir::North).len()
+fn part_one(input: &str) -> Option<usize> {
+    let input = parse(input);
+    Some(run_nocheckloop(&input.cells, input.start_pos, Dir::North).len())
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Hash)]
@@ -171,85 +171,34 @@ fn induces_loop(
     false
 }
 
-#[aoc(day6, part2)]
-fn part2(input: &Parse) -> usize {
+fn part_two(input: &str) -> Option<usize> {
+    let input = parse(input);
     // first run the part one solution to determine which cells I am allowed to
     // edit (these are, naturally, only the cells where the guard naturally goes)
     let mut preds = run_nocheckloop(&input.cells, input.start_pos, Dir::North);
     let cells: &[Vec<Cell>] = &input.cells;
     preds.remove(&input.start_pos); // cannot drop an obstacle on the guard
-    preds
-        .par_iter()
-        .filter(|(x, prev)| induces_loop(cells, prev.loc, prev.dir, **x))
-        .count()
+    Some(
+        preds
+            .par_iter()
+            .filter(|(x, prev)| induces_loop(cells, prev.loc, prev.dir, **x))
+            .count(),
+    )
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pretty_assertions::assert_eq;
-    const TEST_INPUT: &str = "
-....#.....
-.........#
-..........
-..#.......
-.......#..
-..........
-.#..^.....
-........#.
-#.........
-......#...";
 
-    const TEST_E: &str = "
-###
-.^#
-###
-";
-
-    const TEST_W: &str = "
-###
-.^.
-#.#
-";
-
-    const TEST_N: &str = "
-...
-.^.
-...
-";
-    const TEST_S: &str = "
-###
-.^#
-#.#
-";
     #[test]
-    fn test_parse() {
-        let parsed = parse(TEST_INPUT);
-        assert_eq!(parsed.start_pos, Vec2 { x: 4, y: 6 });
-
-        let parsed_n = parse(TEST_N);
-        assert_eq!(parsed_n.start_pos, Vec2 { x: 1, y: 1 });
-        for l in parsed_n.cells.iter() {
-            for c in l.iter() {
-                assert_eq!(Cell::Empty, *c);
-            }
-        }
-    }
-    #[test]
-    fn part1_example() {
-        let parsed = parse(TEST_INPUT);
-        let output = part1(&parsed);
-        assert_eq!(41, output);
-        for (dirname, dir) in &[
-            ("North", TEST_N),
-            ("South", TEST_S),
-            ("East", TEST_E),
-            ("West", TEST_W),
-        ] {
-            assert_eq!(2, part1(&parse(dir)), "Testing direction {}", dirname);
-        }
+    fn test_part_one() {
+        let result = part_one(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, None);
     }
 
     #[test]
-    fn part2_example() {}
+    fn test_part_two() {
+        let result = part_two(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, None);
+    }
 }

@@ -1,8 +1,7 @@
-use aoc_runner_derive::{aoc, aoc_generator};
+aoc_2024::solution!(4);
 
-use util::{Access as _, Vec2};
+use aoc_2024::util::*;
 
-#[aoc_generator(day4)]
 fn parse(input: &str) -> Vec<Vec<u8>> {
     input
         .lines()
@@ -45,54 +44,38 @@ fn discover_2(data: &[Vec<u8>], base_pt: Vec2<i64>) -> bool {
     check_dia(ne, sw) && check_dia(se, nw) && center == b'A'
 }
 
-#[aoc(day4, part1)]
-fn part1(input: &[Vec<u8>]) -> usize {
+fn part_one(input: &str) -> Option<usize> {
     let search_string = b"XMAS";
-    Vec2::<i64>::cover(input)
-        .map(|v| discover(input, search_string, v))
-        .sum()
+    let input = parse(input);
+    Some(
+        Vec2::<i64>::cover(&input)
+            .map(|v| discover(&input, search_string, v))
+            .sum(),
+    )
 }
 
-#[aoc(day4, part2)]
-fn part2(input: &[Vec<u8>]) -> usize {
-    Vec2::<i64>::cover(input)
-        .filter(|v| discover_2(input, *v))
-        .count()
+fn part_two(input: &str) -> Option<usize> {
+    let input = parse(input);
+    Some(
+        Vec2::<i64>::cover(&input)
+            .filter(|v| discover_2(&input, *v))
+            .count(),
+    )
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
-    fn part1_example() {
-        let s = "MMMSXXMASM
-MSAMXMSMSA
-AMXSXMAAMM
-MSAMASMSMX
-XMASAMXAMM
-XXAMMXXAMA
-SMSMSASXSS
-SAXAMASAAA
-MAMMMXMMMM
-MXMXAXMASX";
-        let p = parse(s);
-        assert_eq!(part1(&p), 18);
+    fn test_part_one() {
+        let result = part_one(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, Some(18));
     }
 
     #[test]
-    fn part2_example() {
-        let s = ".M.S......
-..A..MSMS.
-.M.S.MAA..
-..A.ASMSM.
-.M.S.M....
-..........
-S.S.S.S.S.
-.A.A.A.A..
-M.M.M.M.M.
-..........";
-        let p = parse(s);
-        let q: &[Vec<u8>] = &p;
-        assert_eq!(part2(q), 9);
+    fn test_part_two() {
+        let result = part_two(&aoc_2024::template::read_file("examples", DAY));
+        assert_eq!(result, Some(9));
     }
 }
