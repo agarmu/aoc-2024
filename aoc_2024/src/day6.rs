@@ -121,7 +121,7 @@ impl Visit {
 fn induces_loop(input: &Parse, obstacle_added: Vec2<i64>) -> bool {
     use Cell::*;
     use Dir::*;
-    let mut visited_dir: HashSet<Visit> = HashSet::new();
+    let mut obstacles_hit: HashSet<Visit> = HashSet::new();
     let mut current_pos = input.start_pos;
     let mut current_dir = North;
     let cells: &[Vec<Cell>] = &input.cells;
@@ -132,15 +132,15 @@ fn induces_loop(input: &Parse, obstacle_added: Vec2<i64>) -> bool {
             }
             Some(x) => {
                 if x == Blocked || current_pos == obstacle_added {
+                    // check if we've already visited
+                    let s = obstacles_hit.len();
+                    obstacles_hit.insert(Visit::new(current_pos, current_dir));
+                    if obstacles_hit.len() == s {
+                        return true;
+                    }
                     current_pos -= current_dir.dir();
                     current_dir.next();
                 } else {
-                    // check if we've already visited
-                    let s = visited_dir.len();
-                    visited_dir.insert(Visit::new(current_pos, current_dir));
-                    if visited_dir.len() == s {
-                        return true;
-                    }
                     current_pos += current_dir.dir();
                 }
             }
