@@ -7,13 +7,13 @@ use rayon::iter::ParallelIterator;
 use util::Access;
 use util::Vec2;
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 enum Cell {
     Blocked,
     Empty,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash)]
 enum Dir {
     North,
     South,
@@ -41,7 +41,7 @@ impl Dir {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 struct Parse {
     pub cells: Vec<Vec<Cell>>,
     pub start_pos: Vec2<i64>,
@@ -82,7 +82,7 @@ fn part1(input: &Parse) -> usize {
     run_nocheckloop(&input.cells, input.start_pos, Dir::North).len()
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash)]
 struct Pred {
     pub loc: Vec2<i64>,
     pub dir: Dir,
@@ -121,7 +121,7 @@ fn run_nocheckloop(
     pred
 }
 
-#[derive(Clone, Debug, Hash, PartialEq, Eq)]
+#[derive(Clone, Hash, PartialEq, Eq)]
 struct Visit {
     loc: Vec2<i64>,
     dir: Dir,
