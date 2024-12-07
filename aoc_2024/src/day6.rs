@@ -1,6 +1,8 @@
 use std::collections::HashSet;
 
 use aoc_runner_derive::{aoc, aoc_generator};
+use rayon::iter::IntoParallelRefIterator;
+use rayon::iter::ParallelIterator;
 use util::Access;
 use util::Vec2;
 
@@ -154,7 +156,7 @@ fn part2(input: &Parse) -> usize {
     let mut cells_blockable = run_nocheckloop(input);
     cells_blockable.remove(&input.start_pos); // cannot drop an obstacle on the guard
     cells_blockable
-        .iter()
+        .par_iter()
         .filter(|x| induces_loop(input, **x))
         .count()
 }
