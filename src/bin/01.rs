@@ -51,16 +51,16 @@ pub fn part_two(input: &str) -> Option<i64> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
+    use pretty_assertions::assert_eq;
     #[test]
     fn test_part_one() {
         let result = part_one(&aoc_2024::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(11));
     }
 
     #[test]
     fn test_part_two() {
         let result = part_two(&aoc_2024::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(31));
     }
 }
