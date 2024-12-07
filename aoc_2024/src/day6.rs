@@ -10,7 +10,7 @@ enum Cell {
     Empty,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 enum Dir {
     North,
     South,
@@ -76,6 +76,10 @@ fn parse(input: &str) -> Parse {
 
 #[aoc(day6, part1)]
 fn part1(input: &Parse) -> usize {
+    run_nocheckloop(input).len()
+}
+
+fn run_nocheckloop(input: &Parse) -> HashSet<Vec2<i64>> {
     use Cell::*;
     use Dir::*;
     let mut visited: HashSet<Vec2<i64>> = HashSet::new();
@@ -98,8 +102,61 @@ fn part1(input: &Parse) -> usize {
             }
         }
     }
+    visited
+}
 
-    visited.len()
+#[derive(Clone, Debug, Hash, PartialEq, Eq)]
+struct Visit {
+    loc: Vec2<i64>,
+    dir: Dir,
+}
+
+impl Visit {
+    fn new(loc: Vec2<i64>, dir: Dir) -> Self {
+        Self { loc, dir }
+    }
+}
+fn induces_loop(input: &Parse, obstacle_added: Vec2<i64>) -> bool {
+    use Cell::*;
+    use Dir::*;
+    let mut visited_dir: HashSet<Visit> = HashSet::new();
+    let mut current_pos = input.start_pos;
+    let mut current_dir = North;
+    let cells: &[Vec<Cell>] = &input.cells;
+    loop {
+        match cells.try_access(current_pos) {
+            None => {
+                break;
+            }
+            Some(x) => {
+                if x == Blocked || current_pos == obstacle_added {
+                    current_pos -= current_dir.dir();
+                    current_dir.next();
+                } else {
+                    // check if we've already visited
+                    let s = visited_dir.len();
+                    visited_dir.insert(Visit::new(current_pos, current_dir));
+                    if visited_dir.len() == s {
+                        return true;
+                    }
+                    current_pos += current_dir.dir();
+                }
+            }
+        }
+    }
+    false
+}
+
+#[aoc(day6, part2)]
+fn part2(input: &Parse) -> usize {
+    // first run the part one solution to determine which cells I am allowed to
+    // edit (these are, naturally, only the cells where the guard naturally goes)
+    let mut cells_blockable = run_nocheckloop(input);
+    cells_blockable.remove(&input.start_pos); // cannot drop an obstacle on the guard
+    cells_blockable
+        .iter()
+        .filter(|x| induces_loop(input, **x))
+        .count()
 }
 
 #[cfg(test)]
