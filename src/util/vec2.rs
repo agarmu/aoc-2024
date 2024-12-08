@@ -11,6 +11,15 @@ where
     pub y: T,
 }
 
+impl<T> Vec2<T>
+where
+    T: Copy + Add<T, Output = T> + Mul<T, Output = T> + Sub<T, Output = T>,
+{
+    pub fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
 impl<T, U> Mul<T> for Vec2<U>
 where
     T: Into<U>,
