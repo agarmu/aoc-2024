@@ -51,8 +51,9 @@ pub fn part_one(input: &str) -> Option<usize> {
                 })
             })
             .filter(|item| (0..w).contains(&item.x) && (0..h).contains(&item.y))
-            .collect::<HashSet<_>>()
-            .len(),
+            .sorted()
+            .dedup()
+            .count(),
     )
 }
 
