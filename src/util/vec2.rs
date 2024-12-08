@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use itertools::iproduct;
 
@@ -6,9 +6,10 @@ pub trait Vec2Item = Copy
     + Add<Self, Output = Self>
     + Mul<Self, Output = Self>
     + Sub<Self, Output = Self>
-    + Div<Self, Output = Self>;
+    + Div<Self, Output = Self>
+    + Ord;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Vec2<T>
 where
     T: Vec2Item,
@@ -123,6 +124,19 @@ where
     fn sub_assign(&mut self, rhs: Self) {
         self.x = self.x - rhs.x;
         self.y = self.y - rhs.y;
+    }
+}
+
+impl<T> Neg for Vec2<T>
+where
+    T: Vec2Item + Neg<Output = T>,
+{
+    type Output = Self;
+    fn neg(self) -> Self::Output {
+        Self {
+            x: -self.x,
+            y: -self.y,
+        }
     }
 }
 
