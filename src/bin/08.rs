@@ -1,4 +1,5 @@
-use std::{cmp::max, collections::HashSet};
+use hashbrown::HashSet;
+use std::cmp::max;
 
 use aoc_2024::util::Vec2;
 use itertools::Itertools;

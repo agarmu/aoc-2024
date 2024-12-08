@@ -1,6 +1,6 @@
 aoc_2024::solution!(1);
 
-use std::collections::HashMap;
+use hashbrown::HashMap;
 
 fn parse(input: &str) -> (Vec<i64>, Vec<i64>) {
     let (l, r): (Vec<_>, Vec<_>) = input

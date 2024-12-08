@@ -1,10 +1,8 @@
 aoc_2024::solution!(6);
 
-use std::collections::HashMap;
-use std::collections::HashSet;
-
 use aoc_2024::util::Access as _;
 use aoc_2024::util::Vec2;
+use hashbrown::{HashMap, HashSet};
 use rayon::iter::IntoParallelRefIterator as _;
 use rayon::iter::ParallelIterator as _;
 

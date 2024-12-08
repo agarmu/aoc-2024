@@ -1,6 +1,6 @@
 aoc_2024::solution!(5);
 
-use std::collections::{HashMap, HashSet};
+use hashbrown::{HashMap, HashSet};
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 struct Input {
