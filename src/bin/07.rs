@@ -29,18 +29,13 @@ fn parse(input: &str) -> Vec<Data> {
 }
 
 pub fn solvable_pt1(target: u64, numbers: &[u64]) -> bool {
-    // base case: if numbers len = 0
-    if numbers.len() == 1 {
-        numbers[0] == target
-    } else if numbers[0] <= target && solvable_pt1(target - numbers[0], &numbers[1..]) {
-        true
-    } else if target == 0 && numbers[0] == 0 {
-        true // mul by 0
-    } else if target != 0 && numbers[0] != 0 && target % numbers[0] == 0 {
-        solvable_pt1(target / numbers[0], &numbers[1..])
-    } else {
-        false
-    }
+    (numbers.len() == 1 && numbers[0] == target)
+        || (numbers[0] <= target && solvable_pt1(target - numbers[0], &numbers[1..]))
+        || target == 0 && numbers[0] == 0
+        || (target != 0
+            && numbers[0] != 0
+            && target % numbers[0] == 0
+            && solvable_pt1(target / numbers[0], &numbers[1..]))
 }
 
 pub fn part_one(input: &str) -> Option<u64> {
@@ -70,24 +65,15 @@ pub const fn suffix_strict(mut a: u64, mut b: u64) -> Option<u64> {
 }
 
 pub fn solvable_pt2(target: u64, numbers: &[u64]) -> bool {
-    // base case: if numbers len = 0
-    if numbers.len() == 1 {
-        numbers[0] == target
-    } else if numbers[0] <= target && solvable_pt2(target - numbers[0], &numbers[1..]) {
-        true
-    } else if target == 0 && numbers[0] == 0 {
-        true // mul by 0
-    } else if target != 0
-        && numbers[0] != 0
-        && target % numbers[0] == 0
-        && solvable_pt2(target / numbers[0], &numbers[1..])
-    {
-        true
-    } else if let Some(x) = suffix_strict(target, numbers[0]) {
-        solvable_pt2(x, &numbers[1..])
-    } else {
-        false
-    }
+    (numbers.len() == 1 && numbers[0] == target)
+        || (numbers[0] <= target && solvable_pt2(target - numbers[0], &numbers[1..]))
+        || target == 0 && numbers[0] == 0
+        || (target != 0
+            && numbers[0] != 0
+            && target % numbers[0] == 0
+            && solvable_pt2(target / numbers[0], &numbers[1..]))
+        || suffix_strict(target, numbers[0])
+            .map_or_else(|| false, |x| solvable_pt2(x, &numbers[1..]))
 }
 
 pub fn part_two(input: &str) -> Option<u64> {

@@ -37,13 +37,7 @@ pub fn part_two(input: &str) -> Option<i64> {
     }
     Some(
         left.iter()
-            .map(|&x| {
-                if let Some(q) = counts.get(&x) {
-                    x * (*q)
-                } else {
-                    0
-                }
-            })
+            .filter_map(|x| counts.get(x).map(|q| x * (*q)))
             .sum(),
     )
 }

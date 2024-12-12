@@ -12,25 +12,29 @@ fn parse(input: &str) -> Vec<u64> {
 
 fn total_length(x: u64, n: u64, memo: &mut HashMap<(u64, u64), u64>) -> u64 {
     let s = x.to_string();
-    if let Some(v) = memo.get(&(x, n)) {
-        *v
-    } else if n == 0 {
-        1
-    } else if x == 0 {
-        let m = total_length(1, n - 1, memo);
-        memo.insert((x, n), m);
-        m
-    } else if s.len() % 2 == 0 {
-        let r = s[(s.len() / 2)..].parse().unwrap();
-        let l = s[0..(s.len() / 2)].parse().unwrap();
-        let m = total_length(l, n - 1, memo) + total_length(r, n - 1, memo);
-        memo.insert((x, n), m);
-        m
-    } else {
-        let m = total_length(x * 2024, n - 1, memo);
-        memo.insert((x, n), m);
-        m
-    }
+    let k = memo.get(&(x, n)).cloned();
+    k.map_or_else(
+        || {
+            if n == 0 {
+                1
+            } else if x == 0 {
+                let m = total_length(1, n - 1, memo);
+                memo.insert((x, n), m);
+                m
+            } else if s.len() % 2 == 0 {
+                let r = s[(s.len() / 2)..].parse().unwrap();
+                let l = s[0..(s.len() / 2)].parse().unwrap();
+                let m = total_length(l, n - 1, memo) + total_length(r, n - 1, memo);
+                memo.insert((x, n), m);
+                m
+            } else {
+                let m = total_length(x * 2024, n - 1, memo);
+                memo.insert((x, n), m);
+                m
+            }
+        },
+        |v| v,
+    )
 }
 pub fn apply(v: &mut Vec<u64>) {
     let l = v.len();

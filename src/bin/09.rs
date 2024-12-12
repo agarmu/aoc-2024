@@ -6,8 +6,6 @@ use std::{
     collections::{BinaryHeap, VecDeque},
 };
 
-use num::traits::ops::overflowing::OverflowingSub;
-
 aoc_2024::solution!(9);
 
 fn parse(input: &str) -> (Vec<Option<u16>>, VecDeque<usize>) {
@@ -23,15 +21,14 @@ fn parse(input: &str) -> (Vec<Option<u16>>, VecDeque<usize>) {
                 queue.push_back(i + u);
                 v.push(None);
             }
-            i += size;
         } else {
             let id = (id / 2) as u16;
             v.reserve(size);
             for _ in 0..size {
                 v.push(Some(id));
             }
-            i += size;
         }
+        i += size;
     }
 
     (v, queue)
@@ -61,12 +58,6 @@ pub fn part_one(input: &str) -> Option<usize> {
             .map(|(i, v)| (v.unwrap_or(0) as usize) * i)
             .sum(),
     )
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct FreeSpace {
-    idx: usize,
-    size: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -107,12 +98,11 @@ fn parse2(input: &str) -> (Vec<File>, [BinaryHeap<Reverse<usize>>; 10]) {
         let size = (byte - b'0') as usize;
         if id % 2 != 0 {
             free_space[size].push(Reverse(idx));
-            idx += size;
         } else {
             let id = id / 2;
             v.push(File { idx, id, size });
-            idx += size;
         }
+        idx += size;
     }
 
     (v, free_space)
@@ -151,7 +141,7 @@ mod tests {
 
     fn get_lst(v: &[Option<u16>]) -> String {
         v.iter()
-            .map(|x| x.map(|x| x.to_string()).unwrap_or(".".to_owned()))
+            .map(|x| x.map(|x| x.to_string()).unwrap_or_else(|| ".".to_owned()))
             .join("")
     }
     #[test]
