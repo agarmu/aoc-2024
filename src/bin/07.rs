@@ -54,7 +54,7 @@ pub fn part_one(input: &str) -> Option<u64> {
     )
 }
 
-pub fn suffix_strict(mut a: u64, mut b: u64) -> Option<u64> {
+pub const fn suffix_strict(mut a: u64, mut b: u64) -> Option<u64> {
     if a <= b {
         return None;
     }

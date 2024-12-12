@@ -1,5 +1,4 @@
 use hashbrown::HashMap;
-use memoize::memoize;
 
 aoc_2024::solution!(11);
 

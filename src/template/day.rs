@@ -24,7 +24,7 @@ pub struct Day(u8);
 impl Day {
     /// Creates a [`Day`] from the provided value if it's in the valid range,
     /// returns [`None`] otherwise.
-    pub fn new(day: u8) -> Option<Self> {
+    pub const fn new(day: u8) -> Option<Self> {
         if day == 0 || day > 25 {
             return None;
         }
@@ -38,7 +38,7 @@ impl Day {
     }
 
     /// Converts the [`Day`] into an [`u8`].
-    pub fn into_inner(self) -> u8 {
+    pub const fn into_inner(self) -> u8 {
         self.0
     }
 }
@@ -101,7 +101,7 @@ impl Display for DayFromStrError {
 /* -------------------------------------------------------------------------- */
 
 /// An iterator that yields every day of advent from the 1st to the 25th.
-pub fn all_days() -> AllDays {
+pub const fn all_days() -> AllDays {
     AllDays::new()
 }
 
@@ -112,7 +112,7 @@ pub struct AllDays {
 
 impl AllDays {
     #[allow(clippy::new_without_default)]
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self { current: 1 }
     }
 }

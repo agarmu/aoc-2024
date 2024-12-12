@@ -1,15 +1,14 @@
 use aoc_2024::util::{Access, Vec2};
-use hashbrown::HashSet;
 use itertools::iproduct;
-use partitions::{partition_vec, PartitionVec};
+use partitions::PartitionVec;
 
 aoc_2024::solution!(12);
 
-fn to_idx(v: Vec2<i64>, size: Vec2<i64>) -> usize {
+const fn to_idx(v: Vec2<i64>, size: Vec2<i64>) -> usize {
     (v.y * size.x + v.x) as usize
 }
 
-fn from_idx(k: usize, size: Vec2<i64>) -> Vec2<i64> {
+const fn from_idx(k: usize, size: Vec2<i64>) -> Vec2<i64> {
     Vec2::new(k as i64 % size.x, (k as i64) / size.x)
 }
 

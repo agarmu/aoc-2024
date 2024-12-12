@@ -3,11 +3,9 @@
 use std::{
     array::repeat,
     cmp::Reverse,
-    collections::{BTreeSet, BinaryHeap, VecDeque},
-    iter::repeat_n,
+    collections::{BinaryHeap, VecDeque},
 };
 
-use itertools::Itertools;
 use num::traits::ops::overflowing::OverflowingSub;
 
 aoc_2024::solution!(9);
@@ -79,7 +77,7 @@ struct File {
 }
 
 impl File {
-    fn checksum(&self) -> usize {
+    const fn checksum(&self) -> usize {
         let end = self.idx + self.size;
         let e = end * end.overflowing_sub(1).0;
         let s = self.idx * self.idx.overflowing_sub(1).0;

@@ -16,9 +16,9 @@ pub enum AocCommandError {
 impl Display for AocCommandError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            AocCommandError::CommandNotFound => write!(f, "aoc-cli is not present in environment."),
-            AocCommandError::CommandNotCallable => write!(f, "aoc-cli could not be called."),
-            AocCommandError::BadExitStatus(_) => {
+            Self::CommandNotFound => write!(f, "aoc-cli is not present in environment."),
+            Self::CommandNotCallable => write!(f, "aoc-cli could not be called."),
+            Self::BadExitStatus(_) => {
                 write!(f, "aoc-cli exited with a non-zero status.")
             }
         }

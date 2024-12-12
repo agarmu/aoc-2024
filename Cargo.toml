@@ -19,6 +19,14 @@ incremental = false
 codegen-units = 1
 rpath = false
 
+[lints.clippy]
+cargo        = { priority = -1, level = "warn" }
+complexity   = { priority = -1, level = "warn" }
+correctness  = { priority = -1, level = "warn" }
+nursery      = { priority = -1, level = "warn" }
+perf         = { priority = -1, level = "warn" }
+style        = { priority = -1, level = "warn" }
+suspicious   = { priority = -1, level = "warn" }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
@@ -51,6 +59,5 @@ pretty_assertions = "1.4.1"
 rayon = "1.10.0"
 regex = "1.11.1"
 tinyjson = "2.5.1"
-util = "0.1.3"
 
 # Solution dependencies

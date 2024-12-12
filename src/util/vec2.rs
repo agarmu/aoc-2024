@@ -22,7 +22,7 @@ impl<T> Vec2<T>
 where
     T: Vec2Item,
 {
-    pub fn new(x: T, y: T) -> Self {
+    pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 }
@@ -32,7 +32,7 @@ where
     T: Into<U>,
     U: Vec2Item,
 {
-    type Output = Vec2<U>;
+    type Output = Self;
     fn mul(self, t: T) -> Self {
         let t = t.into();
         Self {
@@ -59,7 +59,7 @@ where
     T: Into<U>,
     U: Vec2Item,
 {
-    type Output = Vec2<U>;
+    type Output = Self;
     fn div(self, t: T) -> Self {
         let t = t.into();
         Self {
