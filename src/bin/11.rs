@@ -73,10 +73,4 @@ mod tests {
         let result = part_one(&aoc_2024::template::read_file("examples", DAY));
         assert_eq!(result, Some(55312));
     }
-
-    #[test]
-    fn test_part_two() {
-        let result = part_two(&aoc_2024::template::read_file("examples", DAY));
-        assert_eq!(result, None);
-    }
 }
