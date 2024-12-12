@@ -147,6 +147,8 @@ where
     type Inner: Clone;
     fn access(&self, v: Vec2<T>) -> Self::Inner;
     fn try_access(&self, v: Vec2<T>) -> Option<Self::Inner>;
+    fn mut_access(&mut self, v: Vec2<T>) -> &mut Self::Inner;
+    fn try_mut_access(&mut self, v: Vec2<T>) -> Option<&mut Self::Inner>;
 }
 
 macro_rules! implement_into_from {
@@ -166,7 +168,7 @@ macro_rules! implement_into_from {
             pub  const ZZ: Vec2<$type_name> = Vec2 { x: 0, y: 0 };
         }
 
-        impl<U> Access<$type_name> for &[Vec<U>]
+        impl<U> Access<$type_name> for [Vec<U>]
         where
             U: Clone,
         {
@@ -177,7 +179,17 @@ macro_rules! implement_into_from {
             fn try_access(&self, v: Vec2<$type_name>) -> Option<Self::Inner> {
                 Some(self.get(v.y as usize)?.get(v.x as usize)?.clone())
             }
+            fn mut_access(&mut self, v: Vec2<$type_name>) -> &mut Self::Inner {
+                &mut self[v.y as usize][v.x as usize]
+            }
+            fn try_mut_access(&mut self, v: Vec2<$type_name>) -> Option<&mut Self::Inner> {
+                self.get_mut(v.y as usize)?.get_mut(v.x as usize)
+            }
+
         }
+
+
+
     };
     ($t1:ty, $($t2:ty),+) => {
         implement_into_from! { $t1 }
