@@ -1,4 +1,6 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::ops::{
+    Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign,
+};
 
 use itertools::iproduct;
 
@@ -137,6 +139,44 @@ where
             x: -self.x,
             y: -self.y,
         }
+    }
+}
+
+impl<U> Rem<U> for Vec2<U>
+where
+    U: Vec2Item + Rem<U, Output = U>,
+{
+    type Output = Self;
+    fn rem(self, rhs: U) -> Self {
+        Self::new(self.x % rhs, self.y % rhs)
+    }
+}
+
+impl<U> RemAssign<U> for Vec2<U>
+where
+    U: Vec2Item + Rem<U, Output = U>,
+{
+    fn rem_assign(&mut self, rhs: U) {
+        *self = Self::new(self.x % rhs, self.y % rhs);
+    }
+}
+
+impl<U> Rem<Self> for Vec2<U>
+where
+    U: Vec2Item + Rem<U, Output = U>,
+{
+    type Output = Self;
+    fn rem(self, rhs: Self) -> Self {
+        Self::new(self.x % rhs.x, self.y % rhs.y)
+    }
+}
+
+impl<U> RemAssign<Self> for Vec2<U>
+where
+    U: Vec2Item + Rem<U, Output = U>,
+{
+    fn rem_assign(&mut self, rhs: Self) {
+        *self = Self::new(self.x % rhs.x, self.y % rhs.y);
     }
 }
 
