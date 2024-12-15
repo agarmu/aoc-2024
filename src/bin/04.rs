@@ -15,14 +15,14 @@ fn discover_dir(data: &[Vec<u8>], string: &[u8], base_pt: Vec2<i64>, dir: Vec2<i
         let Some(c) = data.try_access(p) else {
             return false;
         };
-        if c != *x {
+        if *c != *x {
             return false;
         }
     }
     true
 }
 fn discover(data: &[Vec<u8>], string: &[u8], base_pt: Vec2<i64>) -> usize {
-    if string.is_empty() || data.access(base_pt) != string[0] {
+    if string.is_empty() || *data.access(base_pt) != string[0] {
         return 0;
     }
     Vec2::<i64>::MOORE
@@ -35,7 +35,7 @@ const fn check_dia(a: u8, b: u8) -> bool {
     (a == b'M' && b == b'S') || (a == b'S' && b == b'M')
 }
 fn discover_2(data: &[Vec<u8>], base_pt: Vec2<i64>) -> bool {
-    let process = |x| data.try_access(base_pt + x).unwrap_or(b'-');
+    let process = |x| *data.try_access(base_pt + x).unwrap_or(&b'-');
     let ne = process(Vec2::<i64>::NE);
     let se = process(Vec2::<i64>::SE);
     let nw = process(Vec2::<i64>::NW);

@@ -24,7 +24,7 @@ fn count_neighbors_matching(locus: Vec2<i64>, data: &[Vec<u8>], m: Option<u8>) -
         Vec2::<i64>::W,
     ]
     .into_iter()
-    .filter(|dir| data.try_access(locus + *dir) == m)
+    .filter(|dir| data.try_access(locus + *dir).copied() == m)
     .count()
 }
 
@@ -51,7 +51,7 @@ fn count_corners(locus: Vec2<i64>, data: &[Vec<u8>]) -> usize {
 
 fn count_external_neighbors(locus: Vec2<i64>, data: &[Vec<u8>]) -> usize {
     let s = data.try_access(locus);
-    4 - count_neighbors_matching(locus, data, s)
+    4 - count_neighbors_matching(locus, data, s.copied())
 }
 
 fn collect_regions(input: &[Vec<u8>]) -> PartitionVec<Vec2<i64>> {

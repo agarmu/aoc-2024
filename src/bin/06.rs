@@ -151,7 +151,7 @@ fn induces_loop(
                 break;
             }
             Some(x) => {
-                if x == Blocked || current_pos == obstacle_added {
+                if *x == Blocked || current_pos == obstacle_added {
                     // check if we've already visited
                     let s = obstacles_hit.len();
                     obstacles_hit.insert(Visit::new(current_pos, current_dir));

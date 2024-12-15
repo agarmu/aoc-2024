@@ -144,9 +144,9 @@ pub trait Access<T>
 where
     T: Vec2Item,
 {
-    type Inner: Clone;
-    fn access(&self, v: Vec2<T>) -> Self::Inner;
-    fn try_access(&self, v: Vec2<T>) -> Option<Self::Inner>;
+    type Inner;
+    fn access(&self, v: Vec2<T>) -> &Self::Inner;
+    fn try_access(&self, v: Vec2<T>) -> Option<&Self::Inner>;
     fn mut_access(&mut self, v: Vec2<T>) -> &mut Self::Inner;
     fn try_mut_access(&mut self, v: Vec2<T>) -> Option<&mut Self::Inner>;
 }
@@ -173,11 +173,11 @@ macro_rules! implement_into_from {
             U: Clone,
         {
             type Inner = U;
-            fn access(&self, v: Vec2<$type_name>) -> Self::Inner {
-                self[v.y as usize][v.x as usize].clone()
+            fn access(&self, v: Vec2<$type_name>) -> &Self::Inner {
+                &self[v.y as usize][v.x as usize]
             }
-            fn try_access(&self, v: Vec2<$type_name>) -> Option<Self::Inner> {
-                Some(self.get(v.y as usize)?.get(v.x as usize)?.clone())
+            fn try_access(&self, v: Vec2<$type_name>) -> Option<&Self::Inner> {
+                self.get(v.y as usize)?.get(v.x as usize)
             }
             fn mut_access(&mut self, v: Vec2<$type_name>) -> &mut Self::Inner {
                 &mut self[v.y as usize][v.x as usize]
@@ -237,15 +237,15 @@ mod tests {
     fn test_access() {
         let q = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
         let p: &[Vec<_>] = &q;
-        assert_eq!(p.access(Vec2 { x: 0, y: 0 }), 1);
-        assert_eq!(p.access(Vec2 { x: 1, y: 0 }), 2);
-        assert_eq!(p.access(Vec2 { x: 2, y: 0 }), 3);
-        assert_eq!(p.access(Vec2 { x: 0, y: 1 }), 4);
-        assert_eq!(p.access(Vec2 { x: 1, y: 1 }), 5);
-        assert_eq!(p.access(Vec2 { x: 2, y: 1 }), 6);
-        assert_eq!(p.access(Vec2 { x: 0, y: 2 }), 7);
-        assert_eq!(p.access(Vec2 { x: 1, y: 2 }), 8);
-        assert_eq!(p.access(Vec2 { x: 2, y: 2 }), 9);
+        assert_eq!(*p.access(Vec2 { x: 0, y: 0 }), 1);
+        assert_eq!(*p.access(Vec2 { x: 1, y: 0 }), 2);
+        assert_eq!(*p.access(Vec2 { x: 2, y: 0 }), 3);
+        assert_eq!(*p.access(Vec2 { x: 0, y: 1 }), 4);
+        assert_eq!(*p.access(Vec2 { x: 1, y: 1 }), 5);
+        assert_eq!(*p.access(Vec2 { x: 2, y: 1 }), 6);
+        assert_eq!(*p.access(Vec2 { x: 0, y: 2 }), 7);
+        assert_eq!(*p.access(Vec2 { x: 1, y: 2 }), 8);
+        assert_eq!(*p.access(Vec2 { x: 2, y: 2 }), 9);
     }
 
     #[test]
@@ -253,7 +253,7 @@ mod tests {
         let q = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
         let p: &[Vec<_>] = &q;
         for c in Vec2::<i64>::cover(&q) {
-            assert_eq!(p.access(c), q[c.y as usize][c.x as usize]);
+            assert_eq!(*p.access(c), q[c.y as usize][c.x as usize]);
         }
     }
 }
