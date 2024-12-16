@@ -6,6 +6,8 @@ use std::{
     collections::{BinaryHeap, VecDeque},
 };
 
+use itertools::Itertools;
+
 aoc_2024::solution!(9);
 
 fn parse(input: &str) -> (Vec<Option<u16>>, VecDeque<usize>) {
@@ -113,12 +115,16 @@ pub fn part_two(input: &str) -> Option<usize> {
 
     for j in (0..files.len()).rev() {
         let size = files[j].size;
-        // (interval_size, interval_idx)
-        let Some((interval_size, interval_idx)) = (size..=9)
-            .flat_map(|i| free_space[i].peek().map(|x| (i, x.0)))
+
+        let Some((interval_size, interval_idx)) = free_space
+            .iter()
+            .enumerate()
+            .flat_map(|(sz, h)| Some((sz, h.peek()?.0)))
+            .filter(|(sz, idx)| *sz >= files[j].size && *idx < files[j].idx)
+            .sorted_by_key(|(_, idx)| *idx)
             .next()
         else {
-            continue; // no interval found
+            continue;
         };
         // remove that interval
         free_space[interval_size].pop();
@@ -128,7 +134,9 @@ pub fn part_two(input: &str) -> Option<usize> {
 
         let size_left = interval_size - size;
         let interval_idx_new = interval_idx + size;
-        free_space[size_left].push(Reverse(interval_idx_new));
+        if size_left >= 1 {
+            free_space[size_left].push(Reverse(interval_idx_new));
+        }
     }
     Some(files.iter().map(File::checksum).sum())
 }
