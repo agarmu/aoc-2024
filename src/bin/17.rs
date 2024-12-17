@@ -45,7 +45,7 @@ impl Machine {
         })
     }
     #[inline]
-    fn combo(&mut self, val: Reg) -> Reg {
+    fn combo(&self, val: Reg) -> Reg {
         match val {
             0..=3 => val as Reg,
             4 => self.a,
