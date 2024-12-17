@@ -78,7 +78,7 @@ where
 
 fn part_one(input: &str) -> Option<i64> {
     let input = parse(input);
-    let is_lesseq = |x, y| input.edges.get(y).map_or(true, |s| !s.contains(x));
+    let is_lesseq = |x, y| input.edges.get(y).is_none_or(|s| !s.contains(x));
     Some(
         input
             .sorts
@@ -93,8 +93,8 @@ fn part_one(input: &str) -> Option<i64> {
 
 fn part_two(input: &str) -> Option<i64> {
     let input = parse(input);
-    let is_lesseq = |x, y| input.edges.get(y).map_or(true, |s| !s.contains(x));
-    let is_lesseq2 = |x, y| input.edges.get(&y).map_or(true, |s| !s.contains(&x));
+    let is_lesseq = |x, y| input.edges.get(y).is_none_or(|s| !s.contains(x));
+    let is_lesseq2 = |x, y| input.edges.get(&y).is_none_or(|s| !s.contains(&x));
 
     let mut sum = 0;
     for l in &input.sorts {
