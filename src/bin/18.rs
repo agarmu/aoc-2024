@@ -2,11 +2,12 @@ use std::collections::VecDeque;
 
 use aoc_2024::util::Vec2;
 use bit_vec::BitVec;
-use hashbrown::HashSet;
 use itertools::Itertools;
 use partitions::{partition_vec, PartitionVec};
 
 aoc_2024::solution!(18);
+
+const GRID_SIZE: usize = 71;
 
 fn parse_heatmap(order: impl Iterator<Item = Vec2<i64>>, width: usize, height: usize) -> Vec<i64> {
     let mut h = vec![i64::MAX; width * height];
@@ -37,7 +38,7 @@ fn part_one_inner(input: &str, width: usize, height: usize, max_level: i64) -> O
 }
 
 pub fn part_one(input: &str) -> Option<usize> {
-    part_one_inner(input, 71, 71, 1024)
+    part_one_inner(input, GRID_SIZE, GRID_SIZE, 1024)
 }
 
 const fn vec_to_idx(v: Vec2<i64>, size: Vec2<i64>) -> usize {
@@ -49,7 +50,6 @@ fn bfs(blocks: &[i64], width: usize, height: usize, max_level: i64) -> Option<us
     let mut queue = VecDeque::new();
     queue.push_back(Vec2::new(0, 0));
     let mut visited = BitVec::from_elem(width * height, false);
-    //let mut visited = HashSet::<Vec2<i64>>::new();
     let target = Vec2::new(width as i64 - 1, height as i64 - 1);
     let size = Vec2::new(width as i64, height as i64);
     for level in 1..(width * height) {
@@ -80,16 +80,16 @@ fn join_at_locus(
     locus: Vec2<i64>,
     connected_components: &mut PartitionVec<()>,
     size: Vec2<i64>,
-    heatmap: &[i64],
+    heatmap: &BitVec,
 ) {
     let idx = vec_to_idx(locus, size);
-    if heatmap[idx] != i64::MAX {
+    if heatmap[idx] {
         return; // i am blocked :(
     }
     for dir in Vec2::<i64>::CARDINALS {
         let adj = locus + dir;
         let adj_idx = vec_to_idx(adj, size);
-        if out_of_bounds(adj, size) || heatmap[adj_idx] != i64::MAX {
+        if out_of_bounds(adj, size) || heatmap[adj_idx] {
             continue; // neighbor is blocked :(
         }
         connected_components.union(idx, adj_idx);
@@ -98,9 +98,12 @@ fn join_at_locus(
 
 fn part_two_inner(input: &str, width: usize, height: usize) -> Option<String> {
     let order = parse_order(input).collect_vec();
-    let mut heatmap = parse_heatmap(order.iter().copied(), width, height);
     let size = Vec2::new(width as i64, height as i64);
     let mut disjoint_set = partition_vec![(); width * height];
+    let mut heatmap = BitVec::from_elem(width * height, false);
+    for x in &order {
+        heatmap.set(vec_to_idx(*x, size), true);
+    }
 
     // compute connected components
     // with all blocks
@@ -119,7 +122,7 @@ fn part_two_inner(input: &str, width: usize, height: usize) -> Option<String> {
     let target_idx = vec_to_idx(size - Vec2::new(1, 1), size);
 
     for j in (0..order.len()).rev() {
-        heatmap[vec_to_idx(order[j], size)] = i64::MAX;
+        heatmap.set(vec_to_idx(order[j], size), false);
         join_at_locus(order[j], &mut disjoint_set, size, &heatmap);
         if disjoint_set.same_set(start_idx, target_idx) {
             return Some(format!("{},{}", order[j].x, order[j].y));
@@ -129,7 +132,7 @@ fn part_two_inner(input: &str, width: usize, height: usize) -> Option<String> {
 }
 
 pub fn part_two(input: &str) -> Option<String> {
-    part_two_inner(input, 71, 71)
+    part_two_inner(input, GRID_SIZE, GRID_SIZE)
 }
 
 #[cfg(test)]
