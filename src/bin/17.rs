@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 aoc_2024::solution!(17);
 
 type Reg = u64;
@@ -33,7 +35,7 @@ impl<'a> Machine<'a> {
     }
 
     #[inline]
-    fn execute_instruction(&mut self, output: &mut Vec<Reg>) {
+    fn execute_instruction(&mut self) -> Option<u64> {
         let opcode = self.read();
         let operand = self.read();
         match opcode {
@@ -64,7 +66,7 @@ impl<'a> Machine<'a> {
             5 => {
                 // output
                 let c = self.combo(operand);
-                output.push(c % 8);
+                return Some(c % 8);
             }
             6 => {
                 // bdv
@@ -78,19 +80,25 @@ impl<'a> Machine<'a> {
             }
             x => unreachable!("Invalid opcode {}", x),
         }
-    }
-
-    fn simulate(&mut self) -> Vec<u64> {
-        let mut output = Vec::new();
-        while self.ip < self.rom.len() {
-            self.execute_instruction(&mut output);
-        }
-        output
+        None
     }
 
     const fn new(a: Reg, b: Reg, c: Reg, rom: &'a [Reg]) -> Self {
         let ip = 0;
         Self { a, b, c, ip, rom }
+    }
+}
+
+impl Iterator for Machine<'_> {
+    type Item = Reg;
+    fn next(&mut self) -> Option<Self::Item> {
+        while self.ip < self.rom.len() {
+            let next = self.execute_instruction();
+            if next.is_some() {
+                return next;
+            }
+        }
+        None
     }
 }
 
@@ -120,8 +128,8 @@ fn parse(input: &str) -> Option<(Reg, Reg, Reg, Vec<Reg>)> {
 
 pub fn part_one(input: &str) -> Option<String> {
     let (a, b, c, rom) = parse(input)?;
-    let mut machine = Machine::new(a, b, c, &rom);
-    Some(format!("{:?}", machine.simulate()))
+    let machine = Machine::new(a, b, c, &rom);
+    Some(format!("{:?}", machine.collect_vec()))
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
@@ -132,8 +140,8 @@ pub fn part_two(input: &str) -> Option<u64> {
 
 fn backtrack_search(rom: &[u64], idx: usize, a: u64) -> Vec<u64> {
     let k = (0..8).map(move |x| a * 8 + x).filter(move |a| {
-        let mut m = Machine::new(*a, 0, 0, rom);
-        m.simulate() == &rom[idx..]
+        let m = Machine::new(*a, 0, 0, rom);
+        m.eq(rom[idx..].iter().copied())
     });
     if idx == 0 {
         k.collect()
