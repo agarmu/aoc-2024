@@ -259,6 +259,13 @@ macro_rules! implement_dirs {
                 Self::S,
                 Self::W
             ];
+
+            pub const CARDINALS: [Vec2<$type_name>; 4] = [
+                Self::N,
+                Self::E,
+                Self::S,
+                Self::W
+            ];
         }
     };
     ($t1:ty, $($t2:ty),+) => {
