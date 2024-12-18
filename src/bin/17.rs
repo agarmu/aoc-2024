@@ -129,7 +129,7 @@ fn parse(input: &str) -> Option<(Reg, Reg, Reg, Vec<Reg>)> {
 pub fn part_one(input: &str) -> Option<String> {
     let (a, b, c, rom) = parse(input)?;
     let machine = Machine::new(a, b, c, &rom);
-    Some(format!("{:?}", machine.collect_vec()))
+    Some(machine.map(|x| x.to_string()).join(","))
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
