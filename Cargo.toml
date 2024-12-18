@@ -44,6 +44,7 @@ test_lib = []
 [dependencies]
 aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"
+bit-vec = "0.8.0"
 
 # Template dependencies
 chrono = { version = "0.4.38", optional = true }

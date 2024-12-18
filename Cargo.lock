@@ -93,6 +93,7 @@ version = "0.11.0"
 dependencies = [
  "aoc-runner",
  "aoc-runner-derive",
+ "bit-vec 0.8.0",
  "chrono",
  "dhat",
  "hashbrown 0.15.2",
@@ -144,6 +145,12 @@ name = "bit-vec"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f59bbe95d4e52a6398ec21238d31577f2b28a9d86807f06ca59d191d8440d0bb"
+
+[[package]]
+name = "bit-vec"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5e764a1d40d510daf35e07be9eb06e75770908c27d411ee6c92109c9840eaaf7"
 
 [[package]]
 name = "bitflags"
@@ -584,7 +591,7 @@ version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9249745fe5a60e2ebd69cc649af1baf28fa3f4606b24146490124405401510d8"
 dependencies = [
- "bit-vec",
+ "bit-vec 0.5.1",
  "rayon",
 ]
 
